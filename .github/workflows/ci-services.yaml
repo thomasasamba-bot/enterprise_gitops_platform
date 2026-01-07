@@ -4,12 +4,12 @@ on:
   push:
     branches: ["main"]
     paths:
-      - "apps/**"
+      - "services/**"
       - ".github/workflows/**"
   pull_request:
     branches: ["main"]
     paths:
-      - "apps/**"
+      - "services/**"
 
 jobs:
   detect-changes:
@@ -61,7 +61,7 @@ jobs:
       # ---- Build & Scan ----
       - name: Build Image
         run: |
-          docker build -t ${{ matrix.service }}:${{ github.sha }} apps/${{ matrix.service }}
+          docker build -t ${{ matrix.service }}:${{ github.sha }} services/${{ matrix.service }}
 
       - name: Trivy Image Scan
         uses: aquasecurity/trivy-action@0.20.0
@@ -73,5 +73,6 @@ jobs:
       # ---- Push ----
       - name: Push Image
         run: |
-          docker tag ${{ matrix.service }}:${{ github.sha }}${{ secrets.ECR_REGISTRY }}/enterprise-gitops/${{ matrix.service }}:${{ github.sha }}
+          docker tag ${{ matrix.service }}:${{ github.sha }} \
+          ${{ secrets.ECR_REGISTRY }}/enterprise-gitops/${{ matrix.service }}:${{ github.sha }}
           docker push ${{ secrets.ECR_REGISTRY }}/enterprise-gitops/${{ matrix.service }}:${{ github.sha }}

@@ -10,14 +10,15 @@ on:
         required: true
         type: string
     secrets:
-      AWS_ACCESS_KEY_ID:
-        required: true
-      AWS_SECRET_ACCESS_KEY:
+      AWS_ROLE_ARN:
         required: true
 
 jobs:
   build-and-push:
     runs-on: ubuntu-latest
+    permissions:
+      id-token: write
+      contents: read
     steps:
       - name: Checkout Code
         uses: actions/checkout@v4
@@ -25,8 +26,7 @@ jobs:
       - name: Configure AWS Credentials
         uses: aws-actions/configure-aws-credentials@v4
         with:
-          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          role-to-assume: ${{ secrets.AWS_ROLE_ARN }}
           aws-region: us-east-1
 
       - name: Login to Amazon ECR
@@ -40,7 +40,7 @@ jobs:
           IMAGE_TAG: ${{ github.sha }}
         run: |
           # Build
-          docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
+          docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG ${{ inputs.dockerfile_context }}
 
           # Push
           docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
