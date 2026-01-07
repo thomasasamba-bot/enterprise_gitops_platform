@@ -4,7 +4,8 @@ locals {
     "auth-service",
     "product-service",
     "order-service",
-    "payment-service"
+    "payment-service",
+    "notification-service"
   ]
 }
 

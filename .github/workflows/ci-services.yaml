@@ -22,7 +22,7 @@ jobs:
         run: |
           # Ideally use something like 'paths-filter' here for distinct builds.
           # For demo, we just return all services.
-          echo "matrix={\"service\":[\"frontend\",\"auth-service\",\"product-service\",\"order-service\",\"payment-service\"]}" >> $GITHUB_OUTPUT
+          echo "matrix={\"service\":[\"frontend\",\"auth-service\",\"product-service\",\"order-service\",\"payment-service\",\"notification-service\"]}" >> $GITHUB_OUTPUT
 
   build-and-push:
     needs: detect-changes

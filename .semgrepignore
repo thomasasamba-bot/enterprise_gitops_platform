@@ -2,3 +2,6 @@
 services/frontend/.next/
 *.tfstate
 *.tfstate.*
+
+# False Positives
+services/auth-service/index.js
