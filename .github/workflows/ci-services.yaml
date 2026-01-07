@@ -1,78 +1,77 @@
 name: CI - Microservices
 
 on:
-    push:
-        branches: ["main"]
-        paths:
-            - "apps/**"
-            - ".github/workflows/**"
-    pull_request:
-        branches: ["main"]
-        paths:
-            - "apps/**"
+  push:
+    branches: ["main"]
+    paths:
+      - "apps/**"
+      - ".github/workflows/**"
+  pull_request:
+    branches: ["main"]
+    paths:
+      - "apps/**"
 
 jobs:
-    detect-changes:
-        runs-on: ubuntu-latest
-        outputs:
-            matrix: ${{ steps.set-matrix.outputs.matrix }}
-        steps:
-            - uses: actions/checkout@v4
-            - id: set-matrix
-              run: |
-                  # Ideally use something like 'paths-filter' here for distinct builds.
-                  # For demo, we just return all services.
-                  echo "matrix={\"service\":[\"frontend\",\"auth-service\",\"product-service\",\"order-service\",\"payment-service\"]}" >> $GITHUB_OUTPUT
+  detect-changes:
+    runs-on: ubuntu-latest
+    outputs:
+      matrix: ${{ steps.set-matrix.outputs.matrix }}
+    steps:
+      - uses: actions/checkout@v4
+      - id: set-matrix
+        run: |
+          # Ideally use something like 'paths-filter' here for distinct builds.
+          # For demo, we just return all services.
+          echo "matrix={\"service\":[\"frontend\",\"auth-service\",\"product-service\",\"order-service\",\"payment-service\"]}" >> $GITHUB_OUTPUT
 
-    build-and-push:
-        needs: detect-changes
-        if: needs.detect-changes.outputs.matrix != ''
-        strategy:
-            matrix: ${{ fromJson(needs.detect-changes.outputs.matrix) }}
-            fail-fast: false
-        
-        runs-on: ubuntu-latest
-        
-        # Add OIDC permissions
-        permissions:
-            id-token: write
-            contents: read
-        
-        steps:
-            - uses: actions/checkout@v4
+  build-and-push:
+    needs: detect-changes
+    if: needs.detect-changes.outputs.matrix != ''
+    strategy:
+      matrix: ${{ fromJson(needs.detect-changes.outputs.matrix) }}
+      fail-fast: false
 
-            # ---- Security: SAST ----
-            - name: Semgrep SAST
-              uses: returntocorp/semgrep-action@v1
-              with:
-                config: auto
+    runs-on: ubuntu-latest
 
-            # ---- AWS Auth (OIDC) ----
-            - name: Configure AWS Credentials
-              uses: aws-actions/configure-aws-credentials@v4
-              with:
-                role-to-assume: ${{ secrets.AWS_ROLE_ARN }}
-                aws-region: us-east-1
+    # Add OIDC permissions
+    permissions:
+      id-token: write
+      contents: read
 
-            # ---- Login to ECR ----
-            - name: Login to ECR
-              uses: aws-actions/amazon-ecr-login@v2
+    steps:
+      - uses: actions/checkout@v4
 
-            # ---- Build & Scan ----
-            - name: Build Image
-              run: |
-                docker build -t ${{ matrix.service }}:${{ github.sha }} apps/${{ matrix.service }}
+      # ---- Security: SAST ----
+      - name: Semgrep SAST
+        uses: returntocorp/semgrep-action@v1
+        with:
+          config: auto
 
-            - name: Trivy Image Scan
-              uses: aquasecurity/trivy-action@0.20.0
-              with:
-                image-ref: ${{ matrix.service }}:${{ github.sha }}
-                exit-code: 1
-                severity: CRITICAL,HIGH
+      # ---- AWS Auth (OIDC) ----
+      - name: Configure AWS Credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: ${{ secrets.AWS_ROLE_ARN }}
+          aws-region: us-east-1
 
-            # ---- Push ----
-            - name: Push Image
-              run: |
-		docker tag ${{ matrix.service }}:${{ github.sha }} \
-                  ${{ secrets.ECR_REGISTRY }}/enterprise-gitops/${{ matrix.service }}:${{ github.sha }}
-                docker push ${{ secrets.ECR_REGISTRY }}/enterprise-gitops/${{ matrix.service }}:${{ github.sha }}
+      # ---- Login to ECR ----
+      - name: Login to ECR
+        uses: aws-actions/amazon-ecr-login@v2
+
+      # ---- Build & Scan ----
+      - name: Build Image
+        run: |
+          docker build -t ${{ matrix.service }}:${{ github.sha }} apps/${{ matrix.service }}
+
+      - name: Trivy Image Scan
+        uses: aquasecurity/trivy-action@0.20.0
+        with:
+          image-ref: ${{ matrix.service }}:${{ github.sha }}
+          exit-code: 1
+          severity: CRITICAL,HIGH
+
+      # ---- Push ----
+      - name: Push Image
+        run: |
+          docker tag ${{ matrix.service }}:${{ github.sha }}${{ secrets.ECR_REGISTRY }}/enterprise-gitops/${{ matrix.service }}:${{ github.sha }}
+          docker push ${{ secrets.ECR_REGISTRY }}/enterprise-gitops/${{ matrix.service }}:${{ github.sha }}
