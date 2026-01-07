@@ -7,5 +7,9 @@ RUN go build -o payment-service .
 FROM alpine:latest
 WORKDIR /app
 COPY --from=builder /app/payment-service .
+
+RUN addgroup -S appgroup && adduser -S appuser -G appgroup
+USER appuser
+
 EXPOSE 8080
 CMD ["./payment-service"]

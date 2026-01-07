@@ -1,0 +1,4 @@
+# Build artifacts
+services/frontend/.next/
+*.tfstate
+*.tfstate.*
