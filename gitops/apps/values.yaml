@@ -1,0 +1,33 @@
+repoURL: git@github.com:thomasasamba-bot/enterprise_gitops_platform.git
+targetRevision: HEAD
+
+services:
+  frontend:
+    path: gitops/charts/microservice
+    namespace: default
+    image: enterprise-gitops/frontend
+    tag: latest
+
+  auth-service:
+    path: gitops/charts/microservice
+    namespace: default
+    image: enterprise-gitops/auth-service
+    tag: latest
+
+  product-service:
+    path: gitops/charts/microservice
+    namespace: default
+    image: enterprise-gitops/product-service
+    tag: latest
+
+  order-service:
+    path: gitops/charts/microservice
+    namespace: default
+    image: enterprise-gitops/order-service
+    tag: latest
+
+  payment-service:
+    path: gitops/charts/microservice
+    namespace: default
+    image: enterprise-gitops/payment-service
+    tag: latest
