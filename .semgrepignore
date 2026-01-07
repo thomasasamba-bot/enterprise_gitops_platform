@@ -14,3 +14,4 @@ rule:typescript.react.security.audit.react-dangerouslysetinnerhtml.react-dangero
 
 # CSRF middleware - we'll fix this later
 rule:javascript.express.security.audit.express-check-csurf-middleware-usage.express-check-csurf-middleware-usage
+rule:javascript.express.security.audit.express-check-csurf-middleware-usage.express-check-csurf-middleware-usage
