@@ -68,7 +68,7 @@ jobs:
       # ---- Build & Scan ----
       - name: Build Image
         run: |
-          docker build -t ${{ matrix.service }}:${{ github.sha }} services/${{ matrix.service }}
+          docker build --no-cache -t ${{ matrix.service }}:${{ github.sha }} services/${{ matrix.service }}
 
       - name: Trivy Image Scan
         uses: aquasecurity/trivy-action@0.20.0
