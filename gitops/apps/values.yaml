@@ -31,3 +31,9 @@ services:
     namespace: default
     image: enterprise-gitops/payment-service
     tag: latest
+
+  notification-service:
+    path: gitops/charts/microservice
+    namespace: default
+    image: enterprise-gitops/notification-service
+    tag: latest

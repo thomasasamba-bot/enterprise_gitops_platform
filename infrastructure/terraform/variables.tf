@@ -33,3 +33,9 @@ variable "db_password" {
   type        = string
   sensitive   = true
 }
+
+variable "github_repo" {
+  description = "GitHub repository (e.g., owner/repo)"
+  type        = string
+  default     = "thomasasamba-bot/enterprise_gitops_platform"
+}
