@@ -8,7 +8,8 @@ FROM eclipse-temurin:17-jre-alpine
 WORKDIR /services/product-service
 COPY --from=builder /services/product-service/target/*.jar app.jar
 
-RUN addgroup -S appgroup && adduser -S appuser -G appgroup
+RUN apk upgrade --no-cache && \
+    addgroup -S appgroup && adduser -S appuser -G appgroup
 USER appuser
 
 EXPOSE 8080
