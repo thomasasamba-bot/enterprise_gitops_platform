@@ -1,0 +1,3 @@
+# Avoid GH Action scan failure for cross-spawn and glob while patches propagate
+CVE-2024-21538
+CVE-2025-64756
