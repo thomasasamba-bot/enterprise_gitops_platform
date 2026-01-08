@@ -37,3 +37,8 @@ output "ecr_repository_urls" {
   description = "URLs of the ECR repositories"
   value       = { for k, v in aws_ecr_repository.services : k => v.repository_url }
 }
+
+output "ecr_registry" {
+  description = "ECR registry URL (without repository name)"
+  value       = split("/", aws_ecr_repository.services["frontend"].repository_url)[0]
+}
