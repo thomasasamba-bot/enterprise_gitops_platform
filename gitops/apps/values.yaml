@@ -10,7 +10,7 @@ services:
     path: gitops/charts/microservice
     namespace: default
     image: enterprise-gitops/auth-service
-    tag: 2937983fed5f93075ca2dfaf9f3e5c49ee1f01c1
+    tag: 39ce228ac9b4a0f23ffa0ba51060cb0e17b1f927
   product-service:
     path: gitops/charts/microservice
     namespace: default
