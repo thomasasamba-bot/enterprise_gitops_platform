@@ -1,4 +1,4 @@
-repoURL: git@github.com:thomasasamba-bot/enterprise_gitops_platform.git
+repoURL: https://github.com/thomasasamba-bot/enterprise_gitops_platform.git
 targetRevision: HEAD
 services:
   frontend:
