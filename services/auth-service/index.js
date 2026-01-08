@@ -19,6 +19,14 @@ app.get('/health', (req, res) => {
     res.status(200).json({ status: 'UP', service: 'auth-service' });
 });
 
+app.get('/version', (req, res) => {
+    res.status(200).json({
+        service: 'auth-service',
+        version: '1.0.1',
+        timestamp: new Date().toISOString()
+    });
+});
+
 app.post('/register', async (req, res) => {
     try {
         const { username, password } = req.body;
