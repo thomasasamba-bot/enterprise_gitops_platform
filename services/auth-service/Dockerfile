@@ -1,4 +1,4 @@
-FROM node:18-alpine AS builder
+FROM node:20-alpine AS builder
 WORKDIR /services/auth-service
 COPY package*.json ./
 # Force clean install
@@ -8,7 +8,7 @@ RUN npm ci
 COPY . .
 
 # Stage 2: production
-FROM node:18-alpine
+FROM node:20-alpine
 WORKDIR /services/auth-service
 # Bust cache by changing workdir and using npm ci
 COPY --from=builder /services/auth-service/package*.json ./
