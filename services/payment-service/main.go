@@ -42,7 +42,7 @@ func main() {
 	http.HandleFunc("/pay", payHandler)
 
 	log.Println("Payment Service listening on port 8080")
-	if err := http.ListenAndServeTLS(":8080", "cert.pem", "key.pem", nil); err != nil {
+	if err := http.ListenAndServe(":8080", nil); err != nil {
 		log.Fatal(err)
 	}
 }
