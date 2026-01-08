@@ -1,7 +1,8 @@
 FROM python:3.11-slim
 WORKDIR /services/order-service
 COPY requirements.txt .
-RUN pip install --no-cache-dir -r requirements.txt
+RUN apt-get update && apt-get upgrade -y && \
+    pip install --no-cache-dir -r requirements.txt
 COPY . .
 
 RUN groupadd -r appgroup && useradd -r -g appgroup appuser
