@@ -41,12 +41,14 @@ resource "aws_db_instance" "postgres" {
   instance_class       = "db.t3.micro"
   db_name              = "appdb"
   username             = "dbadmin"
-  password             = "Password123!" # In production, use AWS Secrets Manager
+  password             = var.db_password
   parameter_group_name = "default.postgres15"
   db_subnet_group_name = aws_db_subnet_group.rds.name
   vpc_security_group_ids = [aws_security_group.rds.id]
   skip_final_snapshot  = true
   publicly_accessible  = false
+
+  enabled_cloudwatch_logs_exports = ["postgresql", "upgrade"]
 
   tags = {
     Name = "${var.project_name}-db"

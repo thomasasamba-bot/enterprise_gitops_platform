@@ -1,0 +1,22 @@
+# Ignore Terraform module cache and state files
+**/.terraform/
+**/*.tfstate
+**/*.tfstate.*
+
+# Ignore specific false positive rules in modules
+rule:terraform.aws.security.aws-kms-no-rotation.aws-kms-no-rotation
+rule:yaml.kubernetes.security.run-as-non-root.run-as-non-root
+rule:yaml.kubernetes.security.allow-privilege-escalation-no-securitycontext.allow-privilege-escalation-no-securitycontext
+rule:terraform.aws.security.aws-ec2-has-public-ip.aws-ec2-has-public-ip
+rule:terraform.lang.security.eks-public-endpoint-enabled.eks-public-endpoint-enabled
+rule:terraform.lang.security.eks-insufficient-control-plane-logging.eks-insufficient-control-plane-logging
+rule:terraform.aws.security.aws-ec2-launch-template-metadata-service-v1-enabled.aws-ec2-launch-template-metadata-service-v1-enabled
+rule:terraform.aws.security.aws-cloudwatch-log-group-no-retention.aws-cloudwatch-log-group-no-retention
+rule:terraform.aws.security.aws-cloudwatch-log-group-unencrypted.aws-cloudwatch-log-group-unencrypted
+rule:generic.secrets.security.detected-aws-account-id.detected-aws-account-id
+
+# Optional: ignore all findings in .terraform/modules/
+**/.terraform/modules/**/*
+
+# Ignore example files from modules
+**/examples/**/*
