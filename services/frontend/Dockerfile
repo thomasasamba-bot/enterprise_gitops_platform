@@ -3,7 +3,7 @@ FROM node:18-alpine AS base
 FROM base AS deps
 WORKDIR /services/frontend
 COPY package.json package-lock.json* ./
-RUN npm install
+RUN npm ci
 
 FROM base AS builder
 WORKDIR /services/frontend
