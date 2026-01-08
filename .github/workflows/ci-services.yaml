@@ -84,29 +84,34 @@ jobs:
           docker tag ${{ matrix.service }}:${{ github.sha }} $IMAGE_URL
           docker push $IMAGE_URL
 
-      # ---- GitOps: Update Manifests ----
-      - name: Update GitOps Manifest
-        run: |
-          # Use yq to update the image tag in gitops/apps/values.yaml
-          # Note: yq is pre-installed on GitHub-hosted runners
-          yq eval ".services.\"${{ matrix.service }}\".tag = \"${{ github.sha }}\"" -i gitops/apps/values.yaml
-
-      - name: Commit and Push Changes
+      # ---- GitOps: Update Manifests (Robust) ----
+      - name: Update GitOps Manifest and Push
         run: |
           git config --global user.name "github-actions[bot]"
           git config --global user.email "github-actions[bot]@users.noreply.github.com"
-          git add gitops/apps/values.yaml
-          git commit -m "chore(gitops): update ${{ matrix.service }} image tag to ${{ github.sha }} [skip ci]" || echo "No changes to commit"
 
-          # Handle concurrency: retry push if remote has changed
-          for i in {1..5}; do
-            git pull --rebase origin main
-            if git push origin main; then
-              echo "Successfully pushed changes"
-              exit 0
+          for i in {1..10}; do
+            echo "Update attempt $i for ${{ matrix.service }}..."
+            git fetch origin main
+            git reset --hard origin/main
+            
+            yq eval ".services.\"${{ matrix.service }}\".tag = \"${{ github.sha }}\"" -i gitops/apps/values.yaml
+            
+            git add gitops/apps/values.yaml
+            if git commit -m "chore(gitops): update ${{ matrix.service }} image tag to ${{ github.sha }} [skip ci]"; then
+              if git push origin main; then
+                echo "Successfully updated ${{ matrix.service }}"
+                exit 0
+              fi
+            else
+              if [[ $(yq eval ".services.\"${{ matrix.service }}\".tag" gitops/apps/values.yaml) == "${{ github.sha }}" ]]; then
+                echo "Tag already updated for ${{ matrix.service }}."
+                exit 0
+              fi
             fi
-            echo "Push failed, retrying in 5s... (Attempt $i/5)"
-            sleep 5
+            
+            SLEEP_TIME=$((RANDOM % 10 + 2))
+            echo "Retry in ${SLEEP_TIME}s..."
+            sleep ${SLEEP_TIME}
           done
-          echo "Failed to push changes after 5 attempts"
           exit 1
