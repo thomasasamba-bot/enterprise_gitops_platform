@@ -1,7 +1,8 @@
 FROM node:18-alpine AS builder
 WORKDIR /services/auth-service
 COPY package*.json ./
-# Determinstic build
+# Force clean install
+ARG CACHEBUST=1
 RUN npm ci
 
 COPY . .
@@ -11,6 +12,7 @@ FROM node:18-alpine
 WORKDIR /services/auth-service
 # Bust cache by changing workdir and using npm ci
 COPY --from=builder /services/auth-service/package*.json ./
+ARG CACHEBUST=1
 RUN npm ci --omit=dev
 COPY --from=builder /services/auth-service/index.js ./
 
