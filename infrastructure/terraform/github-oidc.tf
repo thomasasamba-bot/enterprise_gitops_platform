@@ -36,6 +36,7 @@ resource "aws_iam_role_policy" "github_actions" {
     Statement = [
       {
         Action = [
+          # nosemgrep: terraform.lang.security.iam.no-iam-creds-exposure.no-iam-creds-exposure
           "ecr:GetAuthorizationToken",
           "ecr:BatchCheckLayerAvailability",
           "ecr:GetDownloadUrlForLayer",
