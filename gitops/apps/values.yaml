@@ -5,7 +5,7 @@ services:
     path: gitops/charts/microservice
     namespace: default
     image: enterprise-gitops/frontend
-    tag: latest
+    tag: 0bb9eede36df5b51cd8fc84339b37f040db80573
   auth-service:
     path: gitops/charts/microservice
     namespace: default
