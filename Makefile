@@ -2,7 +2,7 @@
 # Enterprise GitOps Platform Makefile
 
 # Variables
-APPS_DIR := apps
+APPS_DIR := services
 INFRA_DIR := infrastructure/terraform
 
 .PHONY: all build-frontend build-auth build-payment build-order build-product terraform-validate clean
