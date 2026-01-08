@@ -5,11 +5,16 @@ on:
     branches: ["main"]
     paths:
       - "services/**"
+      - "infrastructure/**"
+      - "gitops/**"
       - ".github/workflows/**"
+      - ".semgrepignore"
   pull_request:
     branches: ["main"]
     paths:
       - "services/**"
+      - "infrastructure/**"
+      - "gitops/**"
 
 jobs:
   detect-changes:
