@@ -15,7 +15,7 @@ services:
     path: gitops/charts/microservice
     namespace: default
     image: enterprise-gitops/product-service
-    tag: ab8f36fd19643f2887a82a60eecf6a232079850e
+    tag: 3b0bf484959733bb2c9fc00fb03965376644a52c
   order-service:
     path: gitops/charts/microservice
     namespace: default
