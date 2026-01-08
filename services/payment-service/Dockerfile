@@ -1,12 +1,12 @@
 FROM golang:1.21-alpine AS builder
-WORKDIR /app
+WORKDIR /services/payment-service
 COPY go.mod ./
 COPY . .
 RUN go build -o payment-service .
 
 FROM alpine:latest
-WORKDIR /app
-COPY --from=builder /app/payment-service .
+WORKDIR /services/payment-service       
+COPY --from=builder /services/payment-service .
 
 RUN addgroup -S appgroup && adduser -S appuser -G appgroup
 USER appuser

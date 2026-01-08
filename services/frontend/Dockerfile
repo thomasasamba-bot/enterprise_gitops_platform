@@ -1,22 +1,22 @@
 FROM node:18-alpine AS base
 
 FROM base AS deps
-WORKDIR /app
+WORKDIR /services/frontend
 COPY package.json package-lock.json* ./
 RUN npm install
 
 FROM base AS builder
-WORKDIR /app
-COPY --from=deps /app/node_modules ./node_modules
+WORKDIR /services/frontend
+COPY --from=deps /services/frontend/node_modules ./node_modules
 COPY . .
 RUN npm run build
 
 FROM base AS runner
-WORKDIR /app
+WORKDIR /services/frontend
 ENV NODE_ENV production
-COPY --from=builder /app/public ./public
-COPY --from=builder /app/.next/static ./.next/static
-COPY --from=builder /app/.next/standalone ./
+COPY --from=builder /services/frontend/public ./public
+COPY --from=builder /services/frontend/.next/static ./.next/static
+COPY --from=builder /services/frontend/.next/standalone ./
 
 RUN addgroup -S appgroup && adduser -S appuser -G appgroup
 USER appuser

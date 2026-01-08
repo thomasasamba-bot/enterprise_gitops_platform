@@ -1,6 +1,6 @@
 FROM ruby:3.2-alpine
 
-WORKDIR /app
+WORKDIR /services/notification-service
 
 # Install build dependencies for native gems (if needed in future)
 # RUN apk add --no-cache build-base

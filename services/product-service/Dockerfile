@@ -1,12 +1,12 @@
 FROM maven:3.9-eclipse-temurin-17 AS builder
-WORKDIR /app
+WORKDIR /services/product-service
 COPY pom.xml .
 COPY src ./src
 RUN mvn clean package -DskipTests
 
 FROM eclipse-temurin:17-jre-alpine
-WORKDIR /app
-COPY --from=builder /app/target/*.jar app.jar
+WORKDIR /services/product-service
+COPY --from=builder /services/product-service/target/*.jar app.jar
 
 RUN addgroup -S appgroup && adduser -S appuser -G appgroup
 USER appuser
