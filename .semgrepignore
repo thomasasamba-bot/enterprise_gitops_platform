@@ -5,3 +5,4 @@ services/frontend/.next/
 
 # False Positives
 services/auth-service/index.js
+infrastructure/terraform/github-oidc.tf
