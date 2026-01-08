@@ -25,7 +25,7 @@ services:
     path: gitops/charts/microservice
     namespace: default
     image: enterprise-gitops/payment-service
-    tag: latest
+    tag: 0bb9eede36df5b51cd8fc84339b37f040db80573
   notification-service:
     path: gitops/charts/microservice
     namespace: default
